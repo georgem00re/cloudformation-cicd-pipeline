@@ -1,0 +1,22 @@
+name: destroy-cloudformation-stack-on-dispatch
+on:
+  workflow_dispatch:
+jobs:
+  destroy:
+    name: Destroy CloudFormation Stack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Delete Stack
+        run: |
+          aws cloudformation delete-stack \
+            --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }}
+      - name: Wait for Stack Deletion
+        run: |
+          aws cloudformation wait stack-delete-complete \
+            --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }}
