@@ -21,5 +21,6 @@ jobs:
         with:
           name: ${{ vars.CLOUDFORMATION_STACK_NAME }}
           template: cloudformation-templates/main.yml
+          no-fail-on-empty-changeset: true
           tags: |
             repo=${{ github.repository }}
