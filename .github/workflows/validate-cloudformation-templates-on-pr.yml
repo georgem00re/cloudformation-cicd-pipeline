@@ -25,4 +25,4 @@ jobs:
         run: |
           aws cloudformation validate-template \
             --region ${{ vars.AWS_REGION }} \
-            --template-body file://cloudformation-templates/main.yaml
+            --template-body file://cloudformation-templates/main.yml
