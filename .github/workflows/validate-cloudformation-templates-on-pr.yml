@@ -1,0 +1,28 @@
+name: validate-cloudformation-templates-on-pr
+on:
+  pull_request:
+    paths:
+      - "cloudformation-templates/*.yaml"
+      - "cloudformation-templates/*.yml"
+      - ".github/workflows/validate-cloudformation-templates-on-pr.yml"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    name: Validate CloudFormation templates with AWS CLI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Validate CloudFormation templates
+        run: |
+          aws cloudformation validate-template \
+            --region ${{ vars.AWS_REGION }} \
+            --template-body file://cloudformation-templates/main.yaml
