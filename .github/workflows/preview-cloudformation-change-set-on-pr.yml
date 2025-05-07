@@ -20,10 +20,15 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
       - name: Create change set
         run: |
-          aws cloudformation deploy \
-            --template-file ./cloudformation-templates/main.yml \
+          aws cloudformation create-change-set \
+            --template-body file://cloudformation-templates/main.yml \
             --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }} \
-            --no-execute-changeset \
+            --change-set-name ${{ github.sha }}
+            --change-set-type UPDATE
+      - name: Wait for change set creation
+        run: |
+          aws cloudformation wait change-set-create-complete \
+            --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }} \
             --change-set-name ${{ github.sha }}
       - name: Preview change set
         run: |
@@ -36,4 +41,3 @@ jobs:
           aws cloudformation delete-change-set \
             --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }}  \
             --change-set-name ${{ github.sha }}
-
