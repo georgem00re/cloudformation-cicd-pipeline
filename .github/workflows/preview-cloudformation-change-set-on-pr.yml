@@ -10,7 +10,7 @@ jobs:
     name: Create and preview CloudFormation change set
     runs-on: ubuntu-latest
     env:
-      CHANGE_SET_NAME: changeset-${{ github.sha }}
+      CHANGE_SET_NAME: changeset-${{ github.sha }} # Change sets must begin with a letter
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -25,7 +25,7 @@ jobs:
           aws cloudformation create-change-set \
             --template-body file://cloudformation-templates/main.yml \
             --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }} \
-            --change-set-name $CHANGE_SET_NAME
+            --change-set-name $CHANGE_SET_NAME \
             --change-set-type UPDATE
       - name: Wait for change set creation
         run: |
