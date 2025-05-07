@@ -36,3 +36,4 @@ jobs:
           aws cloudformation delete-change-set \
             --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }}  \
             --change-set-name ${{ github.sha }}
+
