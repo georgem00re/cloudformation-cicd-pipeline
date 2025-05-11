@@ -18,6 +18,6 @@ jobs:
     steps:
       - name: Echo outputs
         run: |
-          echo "terraform-execution-role-arn=${{ needs.describe-cloudformation-stack.outputs.terraform-execution-role-arn }}
-          echo "terraform-state-bucket-name=${{ needs.describe-cloudformation-stack.outputs.terraform-state-bucket-name }}
-          echo "terraform-state-lock-table-name=${{ needs.describe-cloudformation-stack.outputs.terraform-state-lock-table-name }}
+          echo "terraform-execution-role-arn=${{ needs.describe-cloudformation-stack.outputs.terraform-execution-role-arn }}"
+          echo "terraform-state-bucket-name=${{ needs.describe-cloudformation-stack.outputs.terraform-state-bucket-name }}"
+          echo "terraform-state-lock-table-name=${{ needs.describe-cloudformation-stack.outputs.terraform-state-lock-table-name }}"
