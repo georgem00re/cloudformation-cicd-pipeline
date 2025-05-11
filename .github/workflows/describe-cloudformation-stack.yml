@@ -5,15 +5,14 @@ on:
       aws-region:
         required: true
         type: string
-      aws-access-key-id:
-        required: true
-        type: string
-      aws-secret-access-key:
-        required: true
-        type: string
       cloudformation-stack-name:
         required: true
         type: string
+    secrets:
+      aws-access-key-id:
+        required: true
+      aws-secret-access-key:
+        required: true
     outputs:
       terraform-execution-role-arn:
         description: "The ARN of the Terraform execution role"
@@ -39,9 +38,9 @@ jobs:
         id: describe-cloudformation-stack
         uses: ./.github/actions/setup-cloudformation-environment-and-run-command
         with:
-          aws-access-key-id: ${{ inputs.aws-access-key-id }}
+          aws-access-key-id: ${{ secrets.aws-access-key-id }}
           aws-region: ${{ inputs.aws-region }}
-          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+          aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
           cloudformation-command: |
             STACK_OUTPUT=$(
               aws cloudformation describe-stacks \

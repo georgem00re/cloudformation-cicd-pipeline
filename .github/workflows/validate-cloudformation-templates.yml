@@ -5,12 +5,11 @@ on:
       aws-region:
         required: true
         type: string
+    secrets:
       aws-access-key-id:
         required: true
-        type: string
       aws-secret-access-key:
         required: true
-        type: string
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
@@ -24,9 +23,9 @@ jobs:
       - name: Validate CloudFormation templates
         uses: ./.github/actions/setup-cloudformation-environment-and-run-command
         with:
-          aws-access-key-id: ${{ inputs.aws-access-key-id }}
+          aws-access-key-id: ${{ secrets.aws-access-key-id }}
           aws-region: ${{ inputs.aws-region }}
-          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+          aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
           cloudformation-command: |
             aws cloudformation validate-template \
               --template-body file://cloudformation-templates/main.yml
