@@ -19,6 +19,8 @@ jobs:
     name: Validate CloudFormation templates
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Validate CloudFormation templates
         uses: ./.github/actions/setup-cloudformation-environment-and-run-command
         with:

@@ -19,6 +19,8 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Run Terraform command
         uses: ./.github/actions/setup-terraform-environment-and-run-command
         with:

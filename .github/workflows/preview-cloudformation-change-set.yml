@@ -22,6 +22,8 @@ jobs:
     name: Preview CloudFormation change set
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Setup CloudFormation environment
         uses: ./.github/actions/setup-cloudformation-environment
         with:

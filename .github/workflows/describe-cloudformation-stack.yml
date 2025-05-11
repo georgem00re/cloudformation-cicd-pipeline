@@ -33,6 +33,8 @@ jobs:
       terraform_state_bucket_name: ${{ steps.describe-cloudformation-stack.outputs.terraform_state_bucket_name }}
       terraform_state_lock_table_name: ${{ steps.describe-cloudformation-stack.outputs.terraform_state_lock_table_name }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Describe CloudFormation stack
         id: describe-cloudformation-stack
         uses: ./.github/actions/setup-cloudformation-environment-and-run-command
