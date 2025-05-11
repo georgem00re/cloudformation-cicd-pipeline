@@ -21,6 +21,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ inputs.terraform-execution-role-arn }}
+          aws-region: ${{ inputs.aws-region }}
       - name: Run Terraform command
         uses: ./.github/actions/setup-terraform-environment-and-run-command
         with:
