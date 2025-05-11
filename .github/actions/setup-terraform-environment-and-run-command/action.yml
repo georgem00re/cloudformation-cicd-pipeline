@@ -24,6 +24,11 @@ runs:
   steps:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
+    - name: Configure AWS credentials using OIDC
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: ${{ inputs.terraform-execution-role-arn }}
+        aws-region: ${{ inputs.aws-region }}
     - name: Initialise Terraform
       run: |
         terraform init \
