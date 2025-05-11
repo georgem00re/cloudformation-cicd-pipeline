@@ -35,5 +35,7 @@ jobs:
           name: ${{ inputs.cloudformation-stack-name }}
           template: cloudformation-templates/main.yml
           no-fail-on-empty-changeset: "1"
-          parameter-overrides: RepositoryName=${{ steps.get-repository-name-and-owner.outputs.repository-name }},RepositoryOwner=${{ steps.get-repository-name-and-owner.outputs.repository-owner }}
+          parameter-overrides: > 
+            RepositoryName=${{ steps.get-repository-name-and-owner.outputs.repository-name }},
+            RepositoryOwner=${{ steps.get-repository-name-and-owner.outputs.repository-owner }}
           capabilities: "CAPABILITY_NAMED_IAM"
