@@ -16,7 +16,7 @@ on:
     outputs:
       terraform-execution-role-arn:
         description: "The ARN of the Terraform execution role"
-        value: Testing
+        value: ${{ jobs.describe-cloudformation-stack.outputs.terraform-execution-role-arn }}
       terraform-state-bucket-name:
         description: "The name of the Terraform state S3 bucket"
         value: ${{ jobs.describe-cloudformation-stack.outputs.terraform-state-bucket-name }}
@@ -34,24 +34,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Describe CloudFormation stack
-        id: describe-cloudformation-stack
-        uses: ./.github/actions/setup-cloudformation-environment-and-run-command
+      - name: Setup CloudFormation environment
+        uses: ./.github/actions/setup-cloudformation-environment
         with:
           aws-access-key-id: ${{ secrets.aws-access-key-id }}
           aws-region: ${{ inputs.aws-region }}
           aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
-          cloudformation-command: |
-            STACK_OUTPUT=$(
-              aws cloudformation describe-stacks \
-              --stack-name ${{ inputs.cloudformation-stack-name }} \
-              --query "Stacks[0].Outputs" \
-              --output json
-            )
-            TERRAFORM_EXECUTION_ROLE_ARN=$(echo "$STACK_OUTPUT" | jq -r '.[] | select(.OutputKey=="TerraformExecutionRoleArn") | .OutputValue')
-            TERRAFORM_STATE_BUCKET_NAME=$(echo "$STACK_OUTPUT" | jq -r '.[] | select(.OutputKey=="TerraformStateBucketName") | .OutputValue')
-            TERRAFORM_STATE_LOCK_TABLE_NAME=$(echo "$STACK_OUTPUT" | jq -r '.[] | select(.OutputKey=="TerraformStateLockTableName") | .OutputValue')
-            
-            echo "terraform-execution-role-arn=$TERRAFORM_EXECUTION_ROLE_ARN" >> $GITHUB_OUTPUT
-            echo "terraform-state-bucket-name=$TERRAFORM_STATE_BUCKET_NAME" >> $GITHUB_OUTPUT
-            echo "terraform-state-lock-table-name=$TERRAFORM_STATE_LOCK_TABLE_NAME" >> $GITHUB_OUTPUT
+      - name: Describe CloudFormation stack
+        id: describe-cloudformation-stack
+        run: |
+          STACK_OUTPUT=$(
+            aws cloudformation describe-stacks \
+            --stack-name ${{ inputs.cloudformation-stack-name }} \
+            --query "Stacks[0].Outputs" \
+            --output json
+          )
+          TERRAFORM_EXECUTION_ROLE_ARN=$(echo "$STACK_OUTPUT" | jq -r '.[] | select(.OutputKey=="TerraformExecutionRoleArn") | .OutputValue')
+          TERRAFORM_STATE_BUCKET_NAME=$(echo "$STACK_OUTPUT" | jq -r '.[] | select(.OutputKey=="TerraformStateBucketName") | .OutputValue')
+          TERRAFORM_STATE_LOCK_TABLE_NAME=$(echo "$STACK_OUTPUT" | jq -r '.[] | select(.OutputKey=="TerraformStateLockTableName") | .OutputValue')
+        
+          echo "terraform-execution-role-arn=$TERRAFORM_EXECUTION_ROLE_ARN" >> $GITHUB_OUTPUT
+          echo "terraform-state-bucket-name=$TERRAFORM_STATE_BUCKET_NAME" >> $GITHUB_OUTPUT
+          echo "terraform-state-lock-table-name=$TERRAFORM_STATE_LOCK_TABLE_NAME" >> $GITHUB_OUTPUT
