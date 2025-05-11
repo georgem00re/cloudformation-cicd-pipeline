@@ -4,42 +4,20 @@ on:
     paths:
       - "cloudformation-templates/*.yaml"
       - "cloudformation-templates/*.yml"
-      - ".github/workflows/preview-cloudformation-change-set-on-pr.yml"
+      - ".github/workflows/pull-requests/preview-cloudformation-change-set-on-pr.yml"
+env:
+  AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  CLOUDFORMATION_STACK_NAME: ${{ vars.CLOUDFORMATION_STACK_NAME }}
+  CLOUDFORMATION_CHANGE_SET_NAME: changeset-${{ github.sha }}
 jobs:
-  validate:
-    name: Create and preview CloudFormation change set
-    runs-on: ubuntu-latest
-    env:
-      CHANGE_SET_NAME: changeset-${{ github.sha }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Set up AWS CLI
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
-      - name: Create change set
-        run: |
-          aws cloudformation create-change-set \
-            --template-body file://cloudformation-templates/main.yml \
-            --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }} \
-            --change-set-name $CHANGE_SET_NAME \
-            --change-set-type UPDATE
-      - name: Wait for change set creation
-        run: |
-          aws cloudformation wait change-set-create-complete \
-            --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }} \
-            --change-set-name $CHANGE_SET_NAME
-      - name: Preview change set
-        run: |
-          aws cloudformation describe-change-set \
-            --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }} \
-            --change-set-name $CHANGE_SET_NAME
-      - name: Delete change set
-        if: always() # Ensures this runs even if the previous step fails
-        run: |
-          aws cloudformation delete-change-set \
-            --stack-name ${{ vars.CLOUDFORMATION_STACK_NAME }}  \
-            --change-set-name $CHANGE_SET_NAME
+  preview-cloudformation-change-set:
+    name: Preview CloudFormation change set
+    uses: ./.github/workflows/reusable/preview-cloudformation-change-set.yml
+    with:
+      cloudformation-change-set-name: ${{ env.CLOUDFORMATION_CHANGE_SET_NAME }}
+      cloudformation-stack-name: ${{ env.CLOUDFORMATION_STACK_NAME }}
+      aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      aws-region: ${{ env.AWS_REGION }}

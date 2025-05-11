@@ -1,0 +1,30 @@
+name: run-terraform-plan-on-pr
+on:
+  pull_request:
+    paths:
+      - "terraform/*.tf"
+      - ".github/workflows/pull-requests/run-terraform-plan-on-pr.yml"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+env:
+  AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  CLOUDFORMATION_STACK_NAME: ${{ vars.CLOUDFORMATION_STACK_NAME }}
+jobs:
+  describe-cloudformation-stack:
+    name: Describe CloudFormation stack
+    uses: ./.github/workflows/reusable/describe-cloudformation-stack.yml
+    with:
+      aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+      aws-region: ${{ env.AWS_REGION }}
+      aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      cloudformation-stack-name: ${{ env.CLOUDFORMATION_STACK_NAME }}
+  run-terraform-plan:
+    name: Run Terraform plan
+    uses: ./.github/workflows/reusable/run-terraform-command.yml
+    with:
+      aws-region: ${{ env.AWS_REGION }}
+      terraform-execution-role-arn: ${{ needs.describe-cloudformation-stack.outputs.terraform_execution_role_arn }}
+      terraform-command: terraform plan
