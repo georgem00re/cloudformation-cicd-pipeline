@@ -10,9 +10,6 @@ on:
         required: true
       aws-secret-access-key:
         required: true
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref }}
-  cancel-in-progress: true
 jobs:
   validate-cloudformation-templates:
     name: Validate CloudFormation templates
