@@ -15,7 +15,7 @@ env:
 jobs:
   validate-cloudformation-templates:
     name: Validate CloudFormation templates
-    uses: ./.github/workflows/reusable/validate-cloudformation-templates.yml
+    uses: ./.github/workflows/validate-cloudformation-templates.yml
     with:
       aws-region: ${{ env.AWS_REGION }}
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}

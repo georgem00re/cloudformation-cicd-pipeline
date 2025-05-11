@@ -9,7 +9,7 @@ env:
 jobs:
   run-cloudformation-delete-stack:
     name: Run CloudFormation delete stack
-    uses: ./.github/workflows/reusable/run-cloudformation-delete-stack.yml
+    uses: ./.github/workflows/run-cloudformation-delete-stack.yml
     with:
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
       aws-region: ${{ env.AWS_REGION }}

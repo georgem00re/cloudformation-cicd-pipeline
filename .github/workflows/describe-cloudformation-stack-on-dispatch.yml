@@ -9,7 +9,7 @@ env:
 jobs:
   describe-cloudformation-stack:
     name: Describe CloudFormation stack
-    uses: ./.github/workflows/reusable/describe-cloudformation-stack.yml
+    uses: ./.github/workflows/describe-cloudformation-stack.yml
     with:
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
       aws-region: ${{ env.AWS_REGION }}

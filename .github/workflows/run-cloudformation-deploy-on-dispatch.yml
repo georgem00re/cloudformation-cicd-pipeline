@@ -9,7 +9,7 @@ env:
 jobs:
   run-cloudformation-deploy:
     name: Run CloudFormation deploy
-    uses: ./.github/workflows/reusable/run-cloudformation-deploy.yml
+    uses: ./.github/workflows/run-cloudformation-deploy.yml
     with:
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
       aws-region: ${{ env.AWS_REGION }}

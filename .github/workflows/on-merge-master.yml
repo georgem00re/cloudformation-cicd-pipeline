@@ -11,7 +11,7 @@ env:
 jobs:
   run-cloudformation-deploy:
     name: Run Cloudformation deploy
-    uses: ./.github/workflows/reusable/run-cloudformation-deploy.yml
+    uses: ./.github/workflows/run-cloudformation-deploy.yml
     with:
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
       aws-region: ${{ env.AWS_REGION }}
@@ -20,7 +20,7 @@ jobs:
   describe-cloudformation-stack:
     name: Describe CloudFormation stack
     needs: run-cloudformation-deploy
-    uses: ./.github/workflows/reusable/describe-cloudformation-stack.yml
+    uses: ./.github/workflows/describe-cloudformation-stack.yml
     with:
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
       aws-region: ${{ env.AWS_REGION }}
@@ -29,7 +29,7 @@ jobs:
   run-terraform-apply:
     name: Run Terraform apply
     needs: describe-cloudformation-stack
-    uses: ./.github/workflows/reusable/run-terraform-command.yml
+    uses: ./.github/workflows/run-terraform-command.yml
     with:
       terraform-execution-role-arn: ${{ needs.describe-cloudformation-stack.outputs.terraform_execution_role_arn }}
       terraform-command: |

@@ -9,7 +9,7 @@ env:
 jobs:
   describe-cloudformation-stack:
     name: Describe CloudFormation stack
-    uses: ./.github/workflows/reusable/describe-cloudformation-stack.yml
+    uses: ./.github/workflows/describe-cloudformation-stack.yml
     with:
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
       aws-region: ${{ env.AWS_REGION }}
@@ -17,7 +17,7 @@ jobs:
       cloudformation-stack-name: ${{ env.CLOUDFORMATION_STACK_NAME }}
   run-terraform-destroy:
     name: Run Terraform destroy
-    uses: ./.github/workflows/reusable/run-terraform-command.yml
+    uses: ./.github/workflows/run-terraform-command.yml
     with:
       terraform-execution-role-arn: ${{ needs.describe-cloudformation-stack.outputs.terraform_execution_role_arn }}
       terraform-command: terraform destroy -auto-approve

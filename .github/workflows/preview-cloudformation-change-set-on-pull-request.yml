@@ -14,7 +14,7 @@ env:
 jobs:
   preview-cloudformation-change-set:
     name: Preview CloudFormation change set
-    uses: ./.github/workflows/reusable/preview-cloudformation-change-set.yml
+    uses: ./.github/workflows/preview-cloudformation-change-set.yml
     with:
       cloudformation-change-set-name: ${{ env.CLOUDFORMATION_CHANGE_SET_NAME }}
       cloudformation-stack-name: ${{ env.CLOUDFORMATION_STACK_NAME }}
