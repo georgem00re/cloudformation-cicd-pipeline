@@ -16,7 +16,7 @@ on:
     outputs:
       terraform-execution-role-arn:
         description: "The ARN of the Terraform execution role"
-        value: ${{ jobs.describe-cloudformation-stack.outputs.terraform-execution-role-arn }}
+        value: Testing
       terraform-state-bucket-name:
         description: "The name of the Terraform state S3 bucket"
         value: ${{ jobs.describe-cloudformation-stack.outputs.terraform-state-bucket-name }}
