@@ -11,18 +11,18 @@ jobs:
     name: Run Cloudformation deploy
     uses: ./.github/workflows/run-cloudformation-deploy.yml
     with:
-      aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-region: ${{ vars.AWS_REGION }}
-      aws-secret-access-key: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       cloudformation-stack-name: ${{ vars.CLOUDFORMATION_STACK_NAME }}
   describe-cloudformation-stack:
     name: Describe CloudFormation stack
     needs: run-cloudformation-deploy
     uses: ./.github/workflows/describe-cloudformation-stack.yml
     with:
-      aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-region: ${{ vars.AWS_REGION }}
-      aws-secret-access-key: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       cloudformation-stack-name: ${{ vars.CLOUDFORMATION_STACK_NAME }}
   run-terraform-apply:
     name: Run Terraform apply
