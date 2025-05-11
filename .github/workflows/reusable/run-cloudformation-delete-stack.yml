@@ -1,0 +1,42 @@
+name: run-cloudformation-delete-stack
+on:
+  workflow_call:
+    inputs:
+      aws-region:
+        required: true
+        type: string
+      aws-access-key-id:
+        required: true
+        type: string
+      aws-secret-access-key:
+        required: true
+        type: string
+      cloudformation-stack-name:
+        required: true
+        type: string
+jobs:
+  run-cloudformation-delete-stack:
+    name: Run CloudFormation delete stack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup CloudFormation environment
+        uses: ./.github/actions/setup-cloudformation-environment
+        with:
+          aws-access-key-id: ${{ inputs.aws-access-key-id }}
+          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+          aws-region: ${{ inputs.aws-region }}
+      - name: Check CloudFormation stack exists
+        run: |
+          set -e
+          if ! aws cloudformation describe-stacks --stack-name ${{ inputs.cloudformation-stack-name }} >/dev/null 2>&1; then
+            echo "Error: Stack ${{ inputs.cloudformation-stack-name }} does not exist."
+            exit 1
+          fi
+      - name: Delete CloudFormation stack
+        run: |
+          aws cloudformation delete-stack \
+            --stack-name ${{ inputs.cloudformation-stack-name }}
+      - name: Wait for Stack Deletion
+        run: |
+          aws cloudformation wait stack-delete-complete \
+            --stack-name ${{ inputs.cloudformation-stack-name }}

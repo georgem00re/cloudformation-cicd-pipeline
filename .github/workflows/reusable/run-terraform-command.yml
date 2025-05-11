@@ -1,0 +1,28 @@
+name: run-terraform-command
+on:
+  workflow_call:
+    inputs:
+      terraform-execution-role-arn:
+        required: true
+        type: string
+      aws-region:
+        required: true
+        type: string
+      terraform-command:
+        required: true
+        type: string
+jobs:
+  run-terraform-command:
+    name: Run Terraform command
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Run Terraform command
+        uses: ./.github/actions/setup-terraform-environment-and-run-command
+        with:
+          aws-region: ${{ inputs.aws-region }}
+          terraform-execution-role-arn: ${{ inputs.terraform-execution-role-arn }}
+          terraform-directory: ./terraform
+          terraform-command: ${{ inputs.terraform-command }}

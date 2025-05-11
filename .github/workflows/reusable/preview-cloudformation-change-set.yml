@@ -1,0 +1,53 @@
+name: preview-cloudformation-change-set
+on:
+  workflow_call:
+    inputs:
+      aws-region:
+        required: true
+        type: string
+      aws-access-key-id:
+        required: true
+        type: string
+      aws-secret-access-key:
+        required: true
+        type: string
+      cloudformation-stack-name:
+        required: true
+        type: string
+      cloudformation-change-set-name:
+        required: true
+        type: string
+jobs:
+  preview-cloudformation-change-set:
+    name: Preview CloudFormation change set
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup CloudFormation environment
+        uses: ./.github/actions/setup-cloudformation-environment
+        with:
+          aws-access-key-id: ${{ inputs.aws-access-key-id }}
+          aws-region: ${{ inputs.aws-region }}
+          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+      - name: Create CloudFormation change set
+        run: |
+          aws cloudformation create-change-set \
+            --template-body file://cloudformation-templates/main.yml \
+            --stack-name ${{ inputs.cloudformation-stack-name }} \
+            --change-set-name ${{ inputs.cloudformation-change-set-name }} \
+            --change-set-type UPDATE
+      - name: Wait for CloudFormation change set creation
+        run: |
+          aws cloudformation wait change-set-create-complete \
+            --stack-name ${{ inputs.cloudformation-stack-name }} \
+            --change-set-name ${{ inputs.cloudformation-change-set-name }}
+      - name: Preview CloudFormation change set
+        run: |
+          aws cloudformation describe-change-set \
+            --stack-name ${{ inputs.cloudformation-stack-name }} \
+            --change-set-name ${{ inputs.cloudformation-change-set-name }}
+      - name: Delete CloudFormation change set
+        if: always() # Ensures this runs even if the previous step fails
+        run: |
+          aws cloudformation delete-change-set \
+            --stack-name ${{ inputs.cloudformation-stack-name }}  \
+            --change-set-name ${{ inputs.cloudformation-change-set-name }}

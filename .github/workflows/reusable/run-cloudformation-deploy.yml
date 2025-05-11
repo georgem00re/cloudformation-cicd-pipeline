@@ -1,24 +1,36 @@
 name: run-cloudformation-deploy
 on:
   workflow_call:
+    inputs:
+      aws-region:
+        required: true
+        type: string
+      aws-access-key-id:
+        required: true
+        type: string
+      aws-secret-access-key:
+        required: true
+        type: string
+      cloudformation-stack-name:
+        required: true
+        type: string
 jobs:
-  deploy:
+  cloudformation-deploy:
     name: Deploy CloudFormation template
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
+      - name: Setup CloudFormation environment
+        uses: ./.github/actions/setup-cloudformation-environment
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
-      - name: Deploy templates
+          aws-access-key-id: ${{ inputs.aws-access-key-id }}
+          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+          aws-region: ${{ inputs.aws-region }}
+      - name: Run CloudFormation deploy
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: ${{ vars.CLOUDFORMATION_STACK_NAME }}
+          name: ${{ inputs.cloudformation-stack-name }}
           template: cloudformation-templates/main.yml
           no-fail-on-empty-changeset: "1"
-          tags: |
-            repo=${{ github.repository }}
+          parameter-overrides: |
+            GitHubOrganisationName=${{ github.repository_owner }}
+            GitHubRepositoryName=${{ github.event.repository.name }}
