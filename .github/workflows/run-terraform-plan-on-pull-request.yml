@@ -1,9 +1,9 @@
-name: run-terraform-plan-on-pr
+name: run-terraform-plan-on-pull-request
 on:
   pull_request:
     paths:
       - "terraform/*.tf"
-      - ".github/workflows/pull-requests/run-terraform-plan-on-pr.yml"
+      - ".github/workflows/run-terraform-plan-on-pull-request.yml"
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true

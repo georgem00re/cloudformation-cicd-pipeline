@@ -1,10 +1,10 @@
-name: validate-cloudformation-templates-on-pr
+name: validate-cloudformation-templates-on-pull-request
 on:
   pull_request:
     paths:
       - "cloudformation-templates/*.yaml"
       - "cloudformation-templates/*.yml"
-      - ".github/workflows/pull-requests/validate-cloudformation-templates-on-pr.yml"
+      - ".github/workflows/validate-cloudformation-templates-on-pull-request.yml"
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
