@@ -1,0 +1,10 @@
+name: validate-terraform-on-pull-request
+on:
+  pull_request:
+    paths:
+      - "terraform/*.tf"
+      - ".github/workflows/validate-terraform-on-pull-request.yml"
+jobs:
+  validate-terraform:
+    name: Validate Terraform
+    uses: ./.github/workflows/validate-terraform.yml
