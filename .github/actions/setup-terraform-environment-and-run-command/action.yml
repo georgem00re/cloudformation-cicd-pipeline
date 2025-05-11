@@ -20,7 +20,7 @@ runs:
       uses: aws-actions/configure-aws-credentials@v3
       with:
         role-to-assume: ${{ inputs.terraform-execution-role-arn }}
-        aws-region: ${{ inputs.aws_region }}
+        aws-region: ${{ inputs.aws-region }}
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
     - name: Initialise Terraform
