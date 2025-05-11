@@ -1,0 +1,18 @@
+name: "Get repository name and owner"
+description: Outputs the name of the repository and its owner
+outputs:
+  repository-name:
+    description: "The GitHub repository name"
+    value: ${{ steps.output.outputs.repository-name }}
+  repository-owner:
+    description: "The GitHub repository owner"
+    value: ${{ steps.output.outputs.repository-owner }}
+runs:
+  using: "composite"
+  steps:
+    - name: Output repository name and owner
+      id: output
+      shell: bash
+      run: |
+        echo "repository-name=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_OUTPUT"
+        echo "repository-owner=${GITHUB_REPOSITORY%/*}" >> "$GITHUB_OUTPUT"
