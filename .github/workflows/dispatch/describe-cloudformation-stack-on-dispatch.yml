@@ -1,4 +1,4 @@
-name: run-cloudformation-delete-stack-on-dispatch
+name: describe-cloudformation-stack-on-dispatch
 on:
   workflow_dispatch:
 env:
@@ -7,9 +7,9 @@ env:
   AWS_REGION: ${{ vars.AWS_REGION }}
   CLOUDFORMATION_STACK_NAME: ${{ vars.CLOUDFORMATION_STACK_NAME }}
 jobs:
-  run-cloudformation-delete-stack:
-    name: Run CloudFormation delete stack
-    uses: ./.github/workflows/reusable/run-cloudformation-delete-stack.yml
+  describe-cloudformation-stack:
+    name: Describe CloudFormation stack
+    uses: ./.github/workflows/reusable/describe-cloudformation-stack.yml
     with:
       aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
       aws-region: ${{ env.AWS_REGION }}
