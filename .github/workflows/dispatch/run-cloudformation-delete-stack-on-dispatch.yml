@@ -1,0 +1,17 @@
+name: destroy-cloudformation-stack-on-dispatch
+on:
+  workflow_dispatch:
+env:
+  AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  CLOUDFORMATION_STACK_NAME: ${{ vars.CLOUDFORMATION_STACK_NAME }}
+jobs:
+  destroy-cloudformation-stack:
+    name: Destroy CloudFormation stack
+    uses: run-cloudformation-delete-stack.yml
+    with:
+      aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+      aws-region: ${{ env.AWS_REGION }}
+      aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      cloudformation-stack-name: ${{ env.CLOUDFORMATION_STACK_NAME }}

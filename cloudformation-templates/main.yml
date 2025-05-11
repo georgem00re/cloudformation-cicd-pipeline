@@ -1,11 +1,18 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Example CloudFormation template"
+Description: "Resources required to bootstrap Terraform backend (S3 + DynamoDB + IAM)"
+
+Parameters:
+  GitHubOrganisationName:
+    Type: String
+  GitHubRepositoryName:
+    Type: String
 
 Resources:
-  MyS3Bucket:
+  # S3 bucket responsible for storing Terraform state (.tfstate) files.
+  TerraformStateBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: my-s3-bucket-535345345345
+      BucketName: !Ref "${GitHubOrganisationName}-${GitHubRepositoryName}-tf-state"
       VersioningConfiguration:
         Status: Enabled
       BucketEncryption:
@@ -17,3 +24,58 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
+
+  # DynamoDB table used by Terraform for state locking.
+  TerraformStateLockTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${GitHubOrganisationName}-${GitHubRepositoryName}-tf-state-lock"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: LockID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: LockID
+          KeyType: HASH
+
+  # OIDC provider that allows GitHub Actions to authenticate via federated identity.
+  GitHubOIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      # A thumbprint is mandatory, but it won't be used at all, so we just set it to fff as suggested by github.
+      ThumbprintList:
+        - ffffffffffffffffffffffffffffffffffffffff
+
+  # IAM role assumed by GitHub Actions via OIDC to run Terraform and deploy AWS infrastructure.
+  TerraformExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: TerraformExecutionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GitHubOIDCProvider
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubOrganisationName}/${GitHubRepositoryName}:*"
+              StringEquals:
+                token.actions.githubusercontent.com:aud: "sts.amazonaws.com"
+
+      # For simplicity, I'm grant full administrative access to this role. However, you will want to adhere to the
+      # principle of least privilege. At minimum, this IAM role should enable the Terraform user to read and write
+      # to and from the tfstate S3 bucket and the tfstate-lock DynamoDB table.
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess # Replace with custom policy if needed
+Outputs:
+  TerraformExecutionRoleArn:
+    Value: !GetAtt TerraformExecutionRole.Arn
+  TerraformStateBucketName:
+    Value: !Ref TerraformStateBucket
+  TerraformStateLockTableName:
+    Value: !Ref TerraformStateLockTable
