@@ -27,3 +27,5 @@ jobs:
       aws-region: ${{ vars.AWS_REGION }}
       terraform-execution-role-arn: ${{ needs.describe-cloudformation-stack.outputs.terraform-execution-role-arn }}
       terraform-command: terraform plan
+      terraform-state-bucket-name: ${{ needs.describe-cloudformation-stack.outputs.terraform-state-bucket-name }}
+      terraform-state-lock-table-name: ${{ needs.describe-cloudformation-stack.outputs.terraform-state-lock-table-name }}

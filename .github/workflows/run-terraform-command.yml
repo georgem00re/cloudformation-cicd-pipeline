@@ -11,6 +11,12 @@ on:
       terraform-command:
         required: true
         type: string
+      terraform-state-bucket-name:
+        required: true
+        type: string
+      terraform-state-lock-table-name:
+        required: true
+        type: string
 permissions:
   id-token: write
   contents: read
@@ -33,3 +39,5 @@ jobs:
           terraform-execution-role-arn: ${{ inputs.terraform-execution-role-arn }}
           terraform-directory: ./terraform
           terraform-command: ${{ inputs.terraform-command }}
+          terraform-state-bucket-name: ${{ inputs.terraform-state-bucket-name }}
+          terraform-state-lock-table-name: ${{ inputs.terraform-state-lock-table-name }}

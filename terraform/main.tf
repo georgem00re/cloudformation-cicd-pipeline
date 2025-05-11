@@ -8,9 +8,7 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = var.TF_STATE_BUCKET_NAME
     key = "terraform.tfstate"
-    dynamodb_table = var.TF_STATE_LOCK_TABLE_NAME
   }
 }
 

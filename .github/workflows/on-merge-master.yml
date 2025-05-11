@@ -32,8 +32,7 @@ jobs:
     uses: ./.github/workflows/run-terraform-command.yml
     with:
       terraform-execution-role-arn: ${{ needs.describe-cloudformation-stack.outputs.terraform-execution-role-arn }}
-      terraform-command: |
-        terraform apply -auto-approve
-          -var="TF_STATE_BUCKET_NAME=${{ needs.describe-cloudformation-stack.outputs.terraform-state-bucket-name }}"
-          -var="TF_STATE_LOCK_TABLE_NAME=${{ needs.describe-cloudformation-stack.outputs.terraform-state-lock-table-name }}"
+      terraform-command: terraform apply -auto-approve
       aws-region: ${{ vars.AWS_REGION }}
+      terraform-state-bucket-name: ${{ needs.describe-cloudformation-stack.outputs.terraform-state-bucket-name }}
+      terraform-state-lock-table-name: ${{ needs.describe-cloudformation-stack.outputs.terraform-state-lock-table-name }}

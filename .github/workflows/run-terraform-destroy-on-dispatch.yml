@@ -21,3 +21,5 @@ jobs:
       terraform-execution-role-arn: ${{ needs.describe-cloudformation-stack.outputs.terraform-execution-role-arn }}
       terraform-command: terraform destroy -auto-approve
       aws-region: ${{ vars.AWS_REGION }}
+      terraform-state-bucket-name: ${{ needs.describe-cloudformation-stack.outputs.terraform-state-bucket-name }}
+      terraform-state-lock-table-name: ${{ needs.describe-cloudformation-stack.outputs.terraform-state-lock-table-name }}
