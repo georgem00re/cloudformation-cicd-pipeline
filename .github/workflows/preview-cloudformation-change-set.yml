@@ -39,7 +39,7 @@ jobs:
             --stack-name ${{ inputs.cloudformation-stack-name }} \
             --change-set-name ${{ inputs.cloudformation-change-set-name }} \
             --change-set-type UPDATE \
-            --parameters \ 
+            --parameters \
               ParameterKey=RepositoryName,ParameterValue=${{ steps.get-repository-name-and-owner.outputs.repository-name }} \
               ParameterKey=RepositoryOwner,ParameterValue=${{ steps.get-repository-name-and-owner.outputs.repository-owner }}
       - name: Wait for CloudFormation change set creation
