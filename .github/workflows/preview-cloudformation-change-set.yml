@@ -41,7 +41,7 @@ jobs:
             --change-set-type UPDATE \
             --parameters \ 
               ParameterKey=RepositoryName,ParameterValue=${{ steps.get-repository-name-and-owner.outputs.repository-name }} \
-              ParameterKey=RepositoryOwner,ParameterValue=${{ steps.get-repository-name-and-owner.outputs.repository-owner }} \
+              ParameterKey=RepositoryOwner,ParameterValue=${{ steps.get-repository-name-and-owner.outputs.repository-owner }}
       - name: Wait for CloudFormation change set creation
         run: |
           aws cloudformation wait change-set-create-complete \
