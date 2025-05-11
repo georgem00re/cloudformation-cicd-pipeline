@@ -8,15 +8,11 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
-env:
-  AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ vars.AWS_SECRET_ACCESS_KEY }}
-  AWS_REGION: ${{ vars.AWS_REGION }}
 jobs:
   validate-cloudformation-templates:
     name: Validate CloudFormation templates
     uses: ./.github/workflows/validate-cloudformation-templates.yml
     with:
-      aws-region: ${{ env.AWS_REGION }}
-      aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-      aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+      aws-region: ${{ vars.AWS_REGION }}
+      aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ vars.AWS_SECRET_ACCESS_KEY }}

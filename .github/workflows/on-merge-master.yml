@@ -3,29 +3,24 @@ on:
   push:
     branches:
       - "master"
-env:
-  AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ vars.AWS_SECRET_ACCESS_KEY }}
-  AWS_REGION: ${{ vars.AWS_REGION }}
-  CLOUDFORMATION_STACK_NAME: ${{ vars.CLOUDFORMATION_STACK_NAME }}
 jobs:
   run-cloudformation-deploy:
     name: Run Cloudformation deploy
     uses: ./.github/workflows/run-cloudformation-deploy.yml
     with:
-      aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-      aws-region: ${{ env.AWS_REGION }}
-      aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-      cloudformation-stack-name: ${{ env.CLOUDFORMATION_STACK_NAME }}
+      aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+      aws-region: ${{ vars.AWS_REGION }}
+      aws-secret-access-key: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+      cloudformation-stack-name: ${{ vars.CLOUDFORMATION_STACK_NAME }}
   describe-cloudformation-stack:
     name: Describe CloudFormation stack
     needs: run-cloudformation-deploy
     uses: ./.github/workflows/describe-cloudformation-stack.yml
     with:
-      aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-      aws-region: ${{ env.AWS_REGION }}
-      aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-      cloudformation-stack-name: ${{ env.CLOUDFORMATION_STACK_NAME }}
+      aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+      aws-region: ${{ vars.AWS_REGION }}
+      aws-secret-access-key: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+      cloudformation-stack-name: ${{ vars.CLOUDFORMATION_STACK_NAME }}
   run-terraform-apply:
     name: Run Terraform apply
     needs: describe-cloudformation-stack
@@ -36,4 +31,4 @@ jobs:
         terraform apply -auto-approve
           -var="TF_STATE_BUCKET_NAME=${{ needs.describe-cloudformation-stack.outputs.terraform_state_bucket_name }}"
           -var="TF_STATE_LOCK_TABLE_NAME=${{ needs.describe-cloudformation-stack.outputs.terraform_state_lock_table_name }}"
-      aws-region: ${{ env.AWS_REGION }}
+      aws-region: ${{ vars.AWS_REGION }}

@@ -5,19 +5,13 @@ on:
       - "cloudformation-templates/*.yaml"
       - "cloudformation-templates/*.yml"
       - ".github/workflows/preview-cloudformation-change-set-on-pull-request.yml"
-env:
-  AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ vars.AWS_SECRET_ACCESS_KEY }}
-  AWS_REGION: ${{ vars.AWS_REGION }}
-  CLOUDFORMATION_STACK_NAME: ${{ vars.CLOUDFORMATION_STACK_NAME }}
-  CLOUDFORMATION_CHANGE_SET_NAME: changeset-${{ github.sha }}
 jobs:
   preview-cloudformation-change-set:
     name: Preview CloudFormation change set
     uses: ./.github/workflows/preview-cloudformation-change-set.yml
     with:
-      cloudformation-change-set-name: ${{ env.CLOUDFORMATION_CHANGE_SET_NAME }}
-      cloudformation-stack-name: ${{ env.CLOUDFORMATION_STACK_NAME }}
-      aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-      aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-      aws-region: ${{ env.AWS_REGION }}
+      cloudformation-change-set-name: changeset-${{ github.sha }}
+      cloudformation-stack-name: ${{ vars.CLOUDFORMATION_STACK_NAME }}
+      aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+      aws-region: ${{ vars.AWS_REGION }}
