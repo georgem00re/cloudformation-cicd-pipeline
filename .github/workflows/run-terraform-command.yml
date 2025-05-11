@@ -17,9 +17,6 @@ on:
       terraform-state-lock-table-name:
         required: true
         type: string
-permissions:
-  id-token: write
-  contents: read
 jobs:
   run-terraform-command:
     name: Run Terraform command
