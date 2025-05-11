@@ -29,13 +29,20 @@ jobs:
           aws-access-key-id: ${{ secrets.aws-access-key-id }}
           aws-region: ${{ inputs.aws-region }}
           aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
+      - name: Get repository name and owner
+        id: get-repository-name-and-owner
+        uses: ./.github/actions/get-repository-name-and-owner
       - name: Create CloudFormation change set
         run: |
           aws cloudformation create-change-set \
             --template-body file://cloudformation-templates/main.yml \
             --stack-name ${{ inputs.cloudformation-stack-name }} \
             --change-set-name ${{ inputs.cloudformation-change-set-name }} \
-            --change-set-type UPDATE
+            --change-set-type UPDATE \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --parameters \
+              ParameterKey=RepositoryName,ParameterValue=${{ steps.get-repository-name-and-owner.outputs.repository-name }} \
+              ParameterKey=RepositoryOwner,ParameterValue=${{ steps.get-repository-name-and-owner.outputs.repository-owner }}
       - name: Wait for CloudFormation change set creation
         run: |
           aws cloudformation wait change-set-create-complete \
