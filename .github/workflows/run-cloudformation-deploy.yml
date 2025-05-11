@@ -34,3 +34,4 @@ jobs:
           no-fail-on-empty-changeset: "1"
           parameter-overrides: |
             GitHubRepositoryName=${{ github.repository }}
+          capabilities: "CAPABILITY_NAMED_IAM"
