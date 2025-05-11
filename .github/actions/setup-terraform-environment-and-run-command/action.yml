@@ -1,0 +1,35 @@
+name: "Setup Terraform command and run a command"
+description: "Checkout source code, configure AWS credentials, initialise Terraform, and run Terraform command"
+inputs:
+  terraform-execution-role-arn:
+    description: "The ARN of the Terraform execution role created using the CloudFormation stack."
+    required: true
+  aws-region:
+    description: "The AWS region for the Terraform backend and AWS providers"
+    required: true
+  terraform-directory:
+    description: "The directory containing the Terraform configuration"
+    required: true
+  terraform-command:
+    description: "The Terraform command to execute"
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Configure AWS credentials using OIDC
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: ${{ inputs.terraform-execution-role-arn }}
+        aws-region: ${{ inputs.aws_region }}
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+    - name: Initialise Terraform
+      run: terraform init
+      shell: bash
+      working-directory: ${{ inputs.terraform-directory }}
+    - name: Run Terraform command
+      run: ${{ inputs.terraform-command }}
+      working-directory: ${{ inputs.terraform-directory }}
+      shell: bash
