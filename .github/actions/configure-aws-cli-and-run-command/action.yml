@@ -1,5 +1,4 @@
-name: "Setup CloudFormation environment and run command"
-description: "Checkout source code, configure the AWS CLI, and run a CloudFormation command"
+name: "Configure the AWS CLI and execute a command"
 inputs:
   aws-region:
     description: "The AWS region for the CLI"
@@ -10,18 +9,18 @@ inputs:
   aws-secret-access-key:
     description: "The AWS secret access key for the CLI"
     required: true
-  cloudformation-command:
-    description: "The CloudFormation CLI command to execute"
+  command:
+    description: "The CLI command to execute"
     required: true
 runs:
   using: composite
   steps:
-    - name: Setup CloudFormation environment
-      uses: ./.github/actions/setup-cloudformation-environment
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
       with:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-region: ${{ inputs.aws-region }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
-    - name: Run CloudFormation command
-      run: ${{ inputs.cloudformation-command }}
+    - name: Execute command
+      run: ${{ inputs.command }}
       shell: bash

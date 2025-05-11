@@ -15,13 +15,10 @@ on:
         required: true
     outputs:
       terraform-execution-role-arn:
-        description: "The ARN of the Terraform execution role"
         value: ${{ jobs.describe-cloudformation-stack.outputs.terraform-execution-role-arn }}
       terraform-state-bucket-name:
-        description: "The name of the Terraform state S3 bucket"
         value: ${{ jobs.describe-cloudformation-stack.outputs.terraform-state-bucket-name }}
       terraform-state-lock-table-name:
-        description: "The name of the Terraform state-lock DynamoDB table"
         value: ${{ jobs.describe-cloudformation-stack.outputs.terraform-state-lock-table-name }}
 jobs:
   describe-cloudformation-stack:
@@ -35,7 +32,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Setup CloudFormation environment
-        uses: ./.github/actions/setup-cloudformation-environment
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.aws-access-key-id }}
           aws-region: ${{ inputs.aws-region }}

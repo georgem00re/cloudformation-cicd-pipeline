@@ -21,11 +21,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Validate CloudFormation templates
-        uses: ./.github/actions/setup-cloudformation-environment-and-run-command
+        uses: ./.github/actions/configure-aws-cli-and-run-command
         with:
           aws-access-key-id: ${{ secrets.aws-access-key-id }}
           aws-region: ${{ inputs.aws-region }}
           aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
-          cloudformation-command: |
+          command: |
             aws cloudformation validate-template \
               --template-body file://cloudformation-templates/main.yml

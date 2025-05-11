@@ -24,7 +24,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Setup CloudFormation environment
-        uses: ./.github/actions/setup-cloudformation-environment
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.aws-access-key-id }}
           aws-region: ${{ inputs.aws-region }}

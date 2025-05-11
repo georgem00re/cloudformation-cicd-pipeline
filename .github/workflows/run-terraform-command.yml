@@ -28,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Run Terraform command
-        uses: ./.github/actions/setup-terraform-environment-and-run-command
+        uses: ./.github/actions/configure-terraform-and-run-command
         with:
           aws-region: ${{ inputs.aws-region }}
           terraform-execution-role-arn: ${{ inputs.terraform-execution-role-arn }}

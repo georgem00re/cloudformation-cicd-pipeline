@@ -1,5 +1,4 @@
-name: "Setup Terraform command and run a command"
-description: "Checkout source code, configure AWS credentials, initialise Terraform, and run Terraform command"
+name: "Configure Terraform environment and run command"
 inputs:
   terraform-execution-role-arn:
     description: "The ARN of the Terraform execution role created using the CloudFormation stack."
