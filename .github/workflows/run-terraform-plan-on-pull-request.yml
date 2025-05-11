@@ -4,6 +4,9 @@ on:
     paths:
       - "terraform/*.tf"
       - ".github/workflows/run-terraform-plan-on-pull-request.yml"
+permissions:
+  id-token: write
+  contents: read
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true

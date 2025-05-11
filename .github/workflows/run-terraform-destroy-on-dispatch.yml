@@ -1,6 +1,9 @@
 name: run-terraform-destroy-on-dispatch
 on:
   workflow_dispatch:
+permissions:
+  id-token: write
+  contents: read
 jobs:
   describe-cloudformation-stack:
     name: Describe CloudFormation stack
