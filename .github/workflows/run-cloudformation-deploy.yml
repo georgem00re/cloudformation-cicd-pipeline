@@ -33,5 +33,4 @@ jobs:
           template: cloudformation-templates/main.yml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: |
-            GitHubOrganisationName=${{ github.repository_owner }}
-            GitHubRepositoryName=${{ github.event.repository.name }}
+            GitHubRepositoryName=${{ github.repository }}

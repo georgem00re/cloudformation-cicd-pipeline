@@ -2,17 +2,15 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "Resources required to bootstrap Terraform backend (S3 + DynamoDB + IAM)"
 
 Parameters:
-  GitHubOrganisationName:
-    Type: String
   GitHubRepositoryName:
     Type: String
-
+    Description: "The name of the GitHub source code repository (in the format 'repository_owner/repository_name')"
 Resources:
   # S3 bucket responsible for storing Terraform state (.tfstate) files.
   TerraformStateBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref "${GitHubOrganisationName}-${GitHubRepositoryName}-tf-state"
+      BucketName: !Ref "${GitHubRepositoryName}-tf-state"
       VersioningConfiguration:
         Status: Enabled
       BucketEncryption:
@@ -29,7 +27,7 @@ Resources:
   TerraformStateLockTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub "${GitHubOrganisationName}-${GitHubRepositoryName}-tf-state-lock"
+      TableName: !Sub "${GitHubRepositoryName}-tf-state-lock"
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: LockID
@@ -63,7 +61,7 @@ Resources:
             Action: sts:AssumeRoleWithWebIdentity
             Condition:
               StringLike:
-                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubOrganisationName}/${GitHubRepositoryName}:*"
+                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepositoryName}:*"
               StringEquals:
                 token.actions.githubusercontent.com:aud: "sts.amazonaws.com"
 
