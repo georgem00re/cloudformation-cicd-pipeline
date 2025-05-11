@@ -38,6 +38,17 @@ Resources:
         - AttributeName: LockID
           KeyType: HASH
 
+  # OIDC provider that allows GitHub Actions to authenticate via federated identity.
+  GitHubOIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.org
+      ClientIdList:
+        - sts.amazonaws.com
+      # A thumbprint is mandatory, but it won't be used at all, so we just set it to fff as suggested by github.
+      ThumbprintList:
+        - ffffffffffffffffffffffffffffffffffffffff
+
   # IAM role assumed by GitHub Actions via OIDC to run Terraform and deploy AWS infrastructure.
   TerraformExecutionRole:
     Type: AWS::IAM::Role
