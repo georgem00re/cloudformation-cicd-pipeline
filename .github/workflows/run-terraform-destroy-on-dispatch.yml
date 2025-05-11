@@ -18,6 +18,6 @@ jobs:
     name: Run Terraform destroy
     uses: ./.github/workflows/run-terraform-command.yml
     with:
-      terraform-execution-role-arn: ${{ needs.describe-cloudformation-stack.outputs.terraform_execution_role_arn }}
+      terraform-execution-role-arn: ${{ needs.describe-cloudformation-stack.outputs.terraform-execution-role-arn }}
       terraform-command: terraform destroy -auto-approve
       aws-region: ${{ vars.AWS_REGION }}
